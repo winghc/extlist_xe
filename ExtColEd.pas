@@ -13,7 +13,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtListView, DsgnIntf;
+  StdCtrls, ExtListView,  {$IFDEF DFS_NO_DSGNINTF}
+  DesignIntf,
+  DesignEditors
+  {$ELSE}
+  DsgnIntf
+  {$ENDIF};
 
 type
   TfrmExtListColumns = class(TForm)

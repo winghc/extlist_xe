@@ -2263,8 +2263,12 @@ begin
     // the column information, overwriting our information (image info).  Anyway,
     // catching the condition (begin column header drag) and resetting all the
     // extended information for that column fixes it.
-    HDN_BEGINTRACK, HDN_BEGINTRACKW, // the ...W messages were necessary, why? I do not know.
-    HDN_DIVIDERDBLCLICK, HDN_DIVIDERDBLCLICKW: // doubleclick also
+    HDN_BEGINTRACK,
+    //HDN_BEGINTRACKW, // the ...W messages were necessary, why? I do not know.
+    //  comment HDN_BEGINTRACKW for compile error:  [dcc32 Error] ExtListView.pas(2266): E2030 Duplicate case label
+    HDN_DIVIDERDBLCLICK:
+    //, HDN_DIVIDERDBLCLICKW: // doubleclick also
+    //  comment HDN_BEGINTRACKW for compile error:  [dcc32 Error] ExtListView.pas(2266): E2030 Duplicate case label
     begin
       UpdateColumnImage(PHDNotify(Message.NMHdr).Item); // from above
       if HeaderHandle <> 0 then
@@ -2435,7 +2439,7 @@ begin
        iImage, OverlayImage, StateImage, lParam, NewState, NewStateMask,
        iIndent, Text);
     if (ItemInfo.mask and LVIF_TEXT) = LVIF_TEXT then
-      StrLCopy(ItemInfo.pszText, PChar(Text), ItemInfo.cchTextMax);
+       StrLCopy(ItemInfo.pszText, PAnsiChar(Text), ItemInfo.cchTextMax);
     ItemInfo.State := NewState;
     ItemInfo.State := ItemInfo.State and not UINT(IndexToOverlayMask($FFFF));
     ItemInfo.State := ItemInfo.State or UINT(IndexToOverlayMask(OverlayImage));

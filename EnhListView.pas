@@ -623,10 +623,10 @@ begin
   if not Result then
   begin
     // Remove all thousands seperators
-    S := StringReplace(S, ThousandSeparator, '', [rfReplaceAll]);
+    S := StringReplace(S, FormatSettings.ThousandSeparator, '', [rfReplaceAll]);
     // change DecimalSeperator to '.' because Val only recognizes that, not
     // the locale specific decimal char.  Stupid Val.
-    S := StringReplace(S, DecimalSeparator, '.', [rfReplaceAll]);
+    S := StringReplace(S, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]);
     // and try again
     Val(S, V, NumCode);
     Result := (NumCode = 0);
@@ -643,11 +643,11 @@ begin
   // Check for two date seperators.  This is because some regions use a "-"
   //  to seperate dates, so if we just checked for one we would flag negative
   //  numbers as being dates.
-  i := Pos(DateSeparator, S);
+  i := Pos(FormatSettings.DateSeparator, S);
   HasDate := i > 0;
   if HasDate and (i <> Length(S)) then
-    HasDate := Pos(DateSeparator, Copy(S, i+1, Length(S)-i)) > 0;
-  HasTime := Pos(TimeSeparator, S) > 0;
+    HasDate := Pos(FormatSettings.DateSeparator, Copy(S, i+1, Length(S)-i)) > 0;
+  HasTime := Pos(FormatSettings.TimeSeparator, S) > 0;
   Result := HasDate or HasTime;
   if Result then
   begin
@@ -1888,7 +1888,7 @@ const
 begin
   if NoColumnResize then
     case Message.NMHdr.code of
-      HDN_BEGINTRACK, HDN_TRACK, HDN_BEGINTRACKW, HDN_TRACKW:
+      HDN_BEGINTRACK, HDN_TRACK: // , HDN_BEGINTRACKW, HDN_TRACKW: for compile error: E2030 Duplicate case label
       begin
         Message.Result := 1;
         exit;
@@ -1906,19 +1906,19 @@ begin
   // info at times, too.  Anyway, the best fix I could come up with was to
   // always reset the owner draw flag.
   case Message.NMHdr.code of
-    HDN_BEGINTRACK, HDN_ITEMCHANGED, HDN_BEGINTRACKW, HDN_ITEMCHANGEDW:
+    HDN_BEGINTRACK, HDN_ITEMCHANGED: //, HDN_BEGINTRACKW, HDN_ITEMCHANGEDW: for Compile Error: Duplicate case label
       begin
         if Message.NMHdr.code <> HDN_TRACK then
         begin
-          RECURSE_FLAG := TRUE;
+//          RECURSE_FLAG := TRUE;   // E2064   left side cannot be assigned to, ?? assign to const???
           try
             SetColumnsOwnerDrawFlag(assigned(FOnDrawHeader) or FShowSortArrows);
           finally
-            RECURSE_FLAG := FALSE;
+//            RECURSE_FLAG := FALSE;      //   ?? assign to const???
           end;
         end;
       end;
-    HDN_DIVIDERDBLCLICK, HDN_DIVIDERDBLCLICKW:
+    HDN_DIVIDERDBLCLICK: // , HDN_DIVIDERDBLCLICKW:
       { D4 (and others probably) don't update column width when this happens. }
       begin
         with PHDNotify(Pointer(Message.NMHdr))^ do

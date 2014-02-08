@@ -6,7 +6,7 @@
 {$ENDIF}
 
 {.$DEFINE DFS_DEBUG}
-
+{$WRITEABLECONST ON}
 
 {------------------------------------------------------------------------------}
 { TdfsEnhListView v3.72                                                        }
@@ -1910,11 +1910,11 @@ begin
       begin
         if Message.NMHdr.code <> HDN_TRACK then
         begin
-//          RECURSE_FLAG := TRUE;   // E2064   left side cannot be assigned to, ?? assign to const???
+          RECURSE_FLAG := TRUE;   // E2064   left side cannot be assigned to, ?? assign to const???
           try
             SetColumnsOwnerDrawFlag(assigned(FOnDrawHeader) or FShowSortArrows);
           finally
-//            RECURSE_FLAG := FALSE;      //   ?? assign to const???
+            RECURSE_FLAG := FALSE;      //   ?? assign to const???
           end;
         end;
       end;

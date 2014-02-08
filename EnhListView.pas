@@ -6,7 +6,7 @@
 {$ENDIF}
 
 {.$DEFINE DFS_DEBUG}
-{$WRITEABLECONST ON}
+{$J+} {$WRITEABLECONST ON}
 
 {------------------------------------------------------------------------------}
 { TdfsEnhListView v3.72                                                        }

@@ -623,10 +623,10 @@ begin
   if not Result then
   begin
     // Remove all thousands seperators
-    S := StringReplace(S, FormatSettings.ThousandSeparator, '', [rfReplaceAll]);
+    S := StringReplace(S, {$IFDEF DFS_COMPILER_7_UP}FormatSettings.{$ENDIF}ThousandSeparator, '', [rfReplaceAll]);
     // change DecimalSeperator to '.' because Val only recognizes that, not
     // the locale specific decimal char.  Stupid Val.
-    S := StringReplace(S, FormatSettings.DecimalSeparator, '.', [rfReplaceAll]);
+    S := StringReplace(S, {$IFDEF DFS_COMPILER_7_UP}FormatSettings.{$ENDIF}DecimalSeparator, '.', [rfReplaceAll]);
     // and try again
     Val(S, V, NumCode);
     Result := (NumCode = 0);
@@ -643,11 +643,11 @@ begin
   // Check for two date seperators.  This is because some regions use a "-"
   //  to seperate dates, so if we just checked for one we would flag negative
   //  numbers as being dates.
-  i := Pos(FormatSettings.DateSeparator, S);
+  i := Pos({$IFDEF DFS_COMPILER_7_UP}FormatSettings.{$ENDIF}DateSeparator, S);
   HasDate := i > 0;
   if HasDate and (i <> Length(S)) then
-    HasDate := Pos(FormatSettings.DateSeparator, Copy(S, i+1, Length(S)-i)) > 0;
-  HasTime := Pos(FormatSettings.TimeSeparator, S) > 0;
+    HasDate := Pos({$IFDEF DFS_COMPILER_7_UP}FormatSettings.{$ENDIF}DateSeparator, Copy(S, i+1, Length(S)-i)) > 0;
+  HasTime := Pos({$IFDEF DFS_COMPILER_7_UP}FormatSettings.{$ENDIF}TimeSeparator, S) > 0;
   Result := HasDate or HasTime;
   if Result then
   begin
